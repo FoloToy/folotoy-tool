@@ -1,9 +1,13 @@
 const terminal = document.getElementById("terminal");
 import { Terminal } from "xterm";
+import { throttle, debouce } from '../utils/utils'
 let term;
 let inputTest = "";
-const prefix = "\r\nadmin$: ";
-const prompt = () => {
+const prefix = "\r\n$: ";
+let timer;
+let writeTermDebouce;
+let writeTermThrottle
+function prompt() {
   term.write(prefix);
   inputTest = "";
 };
@@ -15,7 +19,8 @@ function stringToUint8Array(str) {
   
     var tmpUint8Array = new Uint8Array(arr);
     return tmpUint8Array;
-  }
+}
+
 function setTerm(transport) {
   term = new Terminal({
     cols: 120,
@@ -30,6 +35,11 @@ function setTerm(transport) {
   });
   term.open(terminal);
   prompt();
+  setKey(transport)
+  writeTermDebouce = debouce(term.write, prompt, term)
+  writeTermThrottle = throttle(transport.write, transport)
+}
+function setKey(transport) {
   term.onKey((e) => {
     const printable =
       !e.domEvent.altKey &&
@@ -37,13 +47,27 @@ function setTerm(transport) {
       !e.domEvent.ctrlKey &&
       !e.domEvent.metaKey;
     if (e.domEvent.keyCode === 13) {
-      if (transport) {
-        transport.write(stringToUint8Array(inputTest));
+      if (inputTest === 'clear') {
+        inputTest = "";
+        term.clear()
+        term.write("\r\n");
+        prompt()
       }
-      term.write("\r\n");
+      else if (transport) {
+        console.log('写入', inputTest)
+        term.write("\r\n");
+        inputTest && writeTermThrottle(stringToUint8Array(inputTest))
+        if (!timer) {
+          timer = setTimeout(() => {
+            prompt()
+            timer = null
+          }, 2000);
+        }
+      }
+      
     } else if (e.domEvent.keyCode === 8) {
       // back 删除的情况
-      if (term._core.buffer.x > 7) {
+      if (term._core.buffer.x > prefix.length - 2) {
         term.write("\b \b");
       }
       inputTest = inputTest.substring(
@@ -53,7 +77,6 @@ function setTerm(transport) {
     } else if (printable) {
       term.write(e.key);
       inputTest += e.key;
-      console.log(inputTest);
     }
   });
   term.onData((key) => {
@@ -62,9 +85,12 @@ function setTerm(transport) {
   });
 }
 function writeTerm(data) {
-    term.write(data);
+    timer && clearTimeout(timer)
+    timer = null
+    writeTermDebouce(data)
 }
 function disposeTerm() {
+  // window.refresh()
     term.dispose()
     inputTest = "";
 }

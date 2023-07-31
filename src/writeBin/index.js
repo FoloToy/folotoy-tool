@@ -11,15 +11,18 @@ const table = document.getElementById("fileTable");
 const alertDiv = document.getElementById("alertDiv");
 const programButton = document.getElementById("programButton");
 import { ESPLoader, Transport } from "esptool-js";
-import { setTerm, term } from "../xterm/index";
+import { disposeTerm, setTerm, term } from "../xterm/index";
 import CryptoJS from "crypto-js";
 let chip = null;
 let transport;
 let esploader;
 let device = null;
+
+//初始化开始样式，隐藏断开，擦除和文件选择
 disconnectButton.style.display = "none";
 eraseButton.style.display = "none";
 filesDiv.style.display = "none";
+// 选择文件并转成unit8array
 function handleFileSelect(evt) {
   const file = evt.target.files[0];
 
@@ -45,7 +48,7 @@ const espLoaderTerminal = {
     term&&term.write(data);
   },
 };
-
+// 连接设备
 connectButton.onclick = async () => {
   if (device === null) {
     device = await navigator.serial.requestPort({});
@@ -67,7 +70,8 @@ connectButton.onclick = async () => {
     console.error(e);
     term.writeln(`Error: ${e.message}`);
   }
-  console.log("Settings done for :" + chip);
+  // 隐藏baurate按钮，连接按钮
+  // 显示断开 选择文件 擦除按钮
   lblBaudrate.style.display = "none";
   lblConnTo.innerHTML = "Connected to device: " + chip;
   lblConnTo.style.display = "block";
@@ -149,7 +153,6 @@ function cleanUp() {
 
 disconnectButton.onclick = async () => {
   if (transport) await transport.disconnect();
-  term.clear();
   baudrates.style.display = "initial";
   connectButton.style.display = "initial";
   disconnectButton.style.display = "none";
@@ -159,6 +162,7 @@ disconnectButton.onclick = async () => {
   alertDiv.style.display = "none";
   consoleDiv.style.display = "initial";
   cleanUp();
+  disposeTerm()
 };
 addFileButton.onclick(this);
 function validate_program_inputs() {

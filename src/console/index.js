@@ -4,10 +4,10 @@ const programDiv = document.getElementById("program");
 const lblConsoleFor = document.getElementById("lblConsoleFor");
 const resetButton = document.getElementById("resetButton");
 import { Transport } from "esptool-js";
+import { setTerm, writeTerm, disposeTerm } from "../xterm/index";
 let device = null;
 let transport;
-let isConsoleClosed = false;
-import { setTerm, writeTerm, disposeTerm, prompt } from "../xterm/index";
+let isConsoleClosed = true;
 consoleStopButton.style.display = "none";
 consoleStartButton.onclick = async () => {
   if (device === null) {
@@ -21,11 +21,10 @@ consoleStartButton.onclick = async () => {
   await transport.connect();
   isConsoleClosed = false;
   setTerm(transport);
-  while (true && !isConsoleClosed) {
-    const val = await transport.rawRead();
+  while (!isConsoleClosed) {
+    let val = await transport.rawRead();
     if (typeof val !== "undefined") {
       writeTerm(val);
-      prompt();
     } else {
       break;
     }
@@ -35,8 +34,8 @@ consoleStartButton.onclick = async () => {
 
 consoleStopButton.onclick = async () => {
   console.log("stop");
-  disposeTerm();
   isConsoleClosed = true;
+  disposeTerm();
   await transport.disconnect();
   await transport.waitForUnlock(1500);
   consoleStartButton.style.display = "initial";
