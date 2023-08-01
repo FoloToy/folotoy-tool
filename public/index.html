@@ -11,6 +11,42 @@
          <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
          <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
     </head>
+    <style>
+        ::-webkit-scrollbar {
+  display: none;
+}
+        .input-box {
+            position: absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            z-index: 1000;
+            background-color: #000;
+            color:#fff;
+            border-top: 1px solid #fff;
+            height: 30px;
+            /* display: flex; */
+            align-items: center;
+            display: none;
+        }
+        .prefix {
+            display: inline-block;
+            margin: 0 8px;
+        }
+        #inputCommand {
+            outline: none;
+            border:none;
+            background-color: #000;
+            color: #fff;
+            flex: 1
+        }
+        .xterm {
+            padding-bottom: 40px;
+        }
+        .xterm-cursor {
+            display: none !important
+        }
+    </style>
     <body>
         <h1 align="center">ESP</h1>
         <div id="safariErr" style="display:none"><p align="center" style="color:red">This tool is not supported on Safari browser!</p>
@@ -65,7 +101,12 @@
                 <input class="btn btn-info" type="button" id="resetButton" value="重置" />
                 <hr/>
             </div>
-            <div id="terminal"></div>
+            <div id="terminal" style="position: relative">
+                <div class="input-box">
+                    <span class="prefix"> > </span>
+                    <input autofocus id="inputCommand" type="text">
+                  </div>
+            </div>
         </div>
         <!-- <script src="index.bundle.js" ></script> -->
         <script>

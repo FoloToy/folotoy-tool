@@ -12,13 +12,12 @@ export function throttle(fn,transport) {
         fn.call(transport, ...arg)
     }
 }
-export function debouce(fn, fn2, term) {
+export function debouce(fn, term) {
     let debounceTimer = null
     return (...arg) => {
         fn.call(term, ...arg)
         debounceTimer && clearTimeout(debounceTimer)
         debounceTimer = setTimeout( () => {
-            fn2.call(term);
             console.log('执行 deboune')
         }, 1000)
     }

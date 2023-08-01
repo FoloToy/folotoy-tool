@@ -28,6 +28,7 @@
     "esptool-js": "^0.3.0",
     "html-webpack-plugin": "^5.5.3",
     "ts-loader": "^9.4.4",
+    "xterm-addon-fit": "^0.7.0",
     "xterm-addon-web-links": "^0.8.0"
   },
   "sideEffects": [

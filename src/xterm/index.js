@@ -1,22 +1,23 @@
 const terminal = document.getElementById("terminal");
+const inputBox  = document.querySelector('.input-box')
+const input = document.querySelector('#inputCommand')
 import { Terminal } from "xterm";
+import { FitAddon } from 'xterm-addon-fit';
 import { throttle, debouce } from '../utils/utils'
 let term;
 let inputTest = "";
-const prefix = "\r\n$: ";
+const prefix = "$: ";
 let timer;
 let writeTermDebouce;
 let writeTermThrottle
 function prompt() {
-  term.write(prefix);
-  inputTest = "";
+  term.write('\r\n');
 };
 function stringToUint8Array(str) {
     var arr = [];
     for (var i = 0, j = str.length; i < j; ++i) {
       arr.push(str.charCodeAt(i));
     }
-  
     var tmpUint8Array = new Uint8Array(arr);
     return tmpUint8Array;
 }
@@ -30,13 +31,15 @@ function setTerm(transport) {
     theme: {
       foreground: "yellow",
       background: "#060101",
-      cursor: "help", //设置光标
     },
   });
+  const fitAddon = new FitAddon();
+  term.loadAddon(fitAddon);
   term.open(terminal);
-  prompt();
-  setKey(transport)
-  writeTermDebouce = debouce(term.write, prompt, term)
+  inputBox.style.display = 'flex'
+  setInputKey()
+  // setKey(transport)
+  writeTermDebouce = debouce(term.write, term)
   writeTermThrottle = throttle(transport.write, transport)
 }
 function setKey(transport) {
@@ -80,8 +83,12 @@ function setKey(transport) {
     }
   });
   term.onData((key) => {
+    console.log(key)
     // 粘贴的情况
-    if (key.length > 1) term.write(key);
+    if (key.length > 1) {
+      term.write(key);
+      inputTest += key
+    }
   });
 }
 function writeTerm(data) {
@@ -92,6 +99,27 @@ function writeTerm(data) {
 function disposeTerm() {
   // window.refresh()
     term.dispose()
+  inputBox.style.display = 'none'
     inputTest = "";
+}
+function setInputKey () {
+  input.focus()
+  inputBox.addEventListener('keydown', (e) => {
+    console.log(e.key)
+    if (e.key === 'Enter') {
+      if (input.value) {
+        if (input.value === 'clear') {
+          term.clear()
+          // prompt()
+        } else {
+          writeTerm(prefix + input.value)
+          prompt()
+          writeTermThrottle(stringToUint8Array(input.value))
+        }
+      }
+      input.value = ''
+      console.log(input.value)
+    }
+  })
 }
 export {setTerm, writeTerm, disposeTerm, prompt, stringToUint8Array, term}
