@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
   mode: 'production',
   entry: {
@@ -8,10 +9,15 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: 'index.html', 
       template: '/public/index.html',
+      scriptLoading: "defer",
     }),
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "../public/js/"), to: path.resolve(__dirname, "../dist", 'js'), globOptions: {dot: true}},
+        { from: path.resolve(__dirname, "../public/css/"), to: path.resolve(__dirname, "../dist", 'css'), globOptions: {dot: true}},
+    ]})
   ],
   module: {
     rules: [

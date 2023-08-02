@@ -12,6 +12,7 @@ export function throttle(fn,transport) {
         fn.call(transport, ...arg)
     }
 }
+// 防抖
 export function debouce(fn, term) {
     let debounceTimer = null
     return (...arg) => {

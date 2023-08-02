@@ -105,8 +105,8 @@ function disposeTerm() {
 function setInputKey () {
   input.focus()
   inputBox.addEventListener('keydown', (e) => {
-    console.log(e.key)
-    if (e.key === 'Enter') {
+    console.log(e)
+    if (e.keyCode === 13) {
       if (input.value) {
         if (input.value === 'clear') {
           term.clear()
