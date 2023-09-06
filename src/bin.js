@@ -12,13 +12,11 @@ const table = document.getElementById("fileTable");
 const alertDiv = document.getElementById("alertDiv");
 const programButton = document.getElementById("programButton");
 
-
 const deviceBin = new DeviceBin(baudrates.value, 'terminal', 'inputCommand');
 connectButton.onclick =  async () => {
   await deviceBin.connectDevice();
-  console.log('aaa')
   lblBaudrate.style.display = "none";
-  lblConnTo.innerHTML = "Connected to device: " + deviceBin.chip;
+  lblConnTo.innerHTML = "Connected to device: " + deviceBin.deviceInfo;
   lblConnTo.style.display = "block";
   baudrates.style.display = "none";
   connectButton.style.display = "none";
@@ -102,7 +100,7 @@ addFileButton.onclick = () => {
   const element1 = document.createElement("input");
   element1.type = "text";
   element1.id = "offset" + rowCount;
-  element1.value = "0x10000";
+  element1.value = "0x8000";
   cell1.appendChild(element1);
 
   // Column 2 - File selector

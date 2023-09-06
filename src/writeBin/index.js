@@ -10,14 +10,19 @@ export default class DeviceBin {
   esploader;
   device;
   term;
+  deviceInfo;
   constructor(baudrates, terminal, inputCommand) {
     this.baudrates = baudrates
     this.term = new MyTerm(terminal, inputCommand)
   }
   connectDevice = async () => {
     if (!this.device) {
-      this.device = await navigator.serial.requestPort({});
+      this.device = await navigator.serial.requestPort({
+        usbVendorId: '',
+        usbProductId: ''
+      });
       this.transport = new Transport(this.device);
+      this.deviceInfo = this.transport.get_info();
     }
     this.term.setTerm(this.transport);
     console.log(this.term)

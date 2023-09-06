@@ -7,7 +7,7 @@ const resetButton = document.getElementById("resetButton");
 const deviceConsole = new Deviceconsole('terminal', 'inputCommand');
 function connect() {
     lblConsoleFor.style.display = "block";
-    lblConsoleFor.innerHTML = "连接成功：" + deviceConsole.deviceInfo;
+    lblConsoleFor.innerHTML = "Connected to device:" + deviceConsole.deviceInfo;
     consoleStartButton.style.display = "none";
     consoleStopButton.style.display = "initial";
     programDiv.style.display = "none";

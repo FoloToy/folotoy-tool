@@ -5,6 +5,7 @@ export default class Deviceconsole {
   device = null
   transport = null
   isConsoleClosed = true;
+  deviceInfo = null
   constructor(terminal, input) {
     this.term = new MyTerm(terminal, input)
   }
@@ -18,7 +19,7 @@ export default class Deviceconsole {
     this.deviceInfo = this.transport.get_info();
     this.isConsoleClosed = false;
     this.term.setTerm(this.transport);
-    this.term.writeTerm('connected success: ' + this.deviceInfo)
+    this.term.writeTerm(' success: ' + this.deviceInfo)
     this.term.prompt()
     fn.call(null)
     while (!this.isConsoleClosed) {
