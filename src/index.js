@@ -1,3 +1,3 @@
-require('./console/index');
-require('./writeBin/index')
 import "./index.css";
+require('./bin')
+require('./console')

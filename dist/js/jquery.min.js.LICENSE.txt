@@ -1,1 +1,0 @@
-/*! For license information please see jquery.min.js.LICENSE.txt */

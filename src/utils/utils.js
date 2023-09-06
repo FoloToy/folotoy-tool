@@ -5,7 +5,6 @@ export function throttle(fn,transport) {
         console.log(timer)
         if (timer) return;
         timer = setTimeout(() => {
-            console.log('写入timer')
             clearTimeout(timer)
             timer = null
         }, 1000);
@@ -16,10 +15,10 @@ export function throttle(fn,transport) {
 export function debouce(fn, term) {
     let debounceTimer = null
     return (...arg) => {
-        fn.call(term, ...arg)
+        fn.call(term.term, ...arg)
         debounceTimer && clearTimeout(debounceTimer)
         debounceTimer = setTimeout( () => {
-            console.log('执行 deboune')
+            term.prompt()
         }, 1000)
     }
 }
