@@ -25,7 +25,6 @@ export default class DeviceBin {
       this.deviceInfo = this.transport.get_info();
     }
     this.term.setTerm(this.transport);
-    console.log(this.term)
     this.espLoaderTerminal = {
       clean: () => {
         this.term && this.term.term.clear();
