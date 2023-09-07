@@ -11,12 +11,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: '/public/index.html',
       scriptLoading: "defer",
+      inject: true,
     }),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, "../public/js/"), to: path.resolve(__dirname, "../dist", 'js'), globOptions: {dot: true}},
         { from: path.resolve(__dirname, "../public/css/"), to: path.resolve(__dirname, "../dist", 'css'), globOptions: {dot: true}},
+        { from: path.resolve(__dirname, "../public/favicon.svg"), to: path.resolve(__dirname, "../dist"), globOptions: {dot: true}},
     ]})
   ],
   module: {
