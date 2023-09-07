@@ -19,6 +19,7 @@ export function debouce(fn, term) {
         debounceTimer && clearTimeout(debounceTimer)
         debounceTimer = setTimeout( () => {
             term.prompt()
+            debounceTimer = null
         }, 1000)
     }
 }

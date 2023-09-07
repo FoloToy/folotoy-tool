@@ -13,7 +13,12 @@ const alertDiv = document.getElementById("alertDiv");
 const programButton = document.getElementById("programButton");
 
 const deviceBin = new DeviceBin(baudrates.value, 'terminal', 'inputCommand');
-connectButton.onclick =  async () => {
+connectButton.onclick =  handleConectDevice
+disconnectButton.onclick = handleDisconnect
+addFileButton.onclick = handleAddFile
+eraseButton.onclick = handleErase
+programButton.onclick = handleProgram
+async function handleConectDevice () {
   await deviceBin.connectDevice();
   lblBaudrate.style.display = "none";
   lblConnTo.innerHTML = "Connected to device: " + deviceBin.deviceInfo;
@@ -24,8 +29,8 @@ connectButton.onclick =  async () => {
   eraseButton.style.display = "initial";
   filesDiv.style.display = "initial";
   consoleDiv.style.display = "none";
-};
-disconnectButton.onclick = async () => {
+}
+async function handleDisconnect() {
   await deviceBin.disConnectDevice()
   baudrates.style.display = "initial";
   connectButton.style.display = "initial";
@@ -35,15 +40,15 @@ disconnectButton.onclick = async () => {
   filesDiv.style.display = "none";
   alertDiv.style.display = "none";
   consoleDiv.style.display = "initial";
-};
-eraseButton.onclick = async () => {
-  // eraseButton.disabled = true;
-  // const p = deviceBin.eraseDevice();
-  // p.finally(() => {
-  //   eraseButton.disabled = false;
-  // });
-  deviceBin.resetDevice()
-};
+}
+async function handleErase() {
+  eraseButton.disabled = true;
+  const p = deviceBin.eraseDevice();
+  p.finally(() => {
+    eraseButton.disabled = false;
+    alert('Please Restart Device!')
+  });
+}
 function handleFileSelect(evt) {
   const file = evt.target.files[0];
 
@@ -91,8 +96,7 @@ function removeRow(row) {
   const rowIndex = Array.from(table.rows).indexOf(row);
   table.deleteRow(rowIndex);
 }
-
-addFileButton.onclick = () => {
+function handleAddFile () {
   const rowCount = table.rows.length;
   const row = table.insertRow(rowCount);
 
@@ -134,8 +138,8 @@ addFileButton.onclick = () => {
     };
     cell4.appendChild(element4);
   }
-};
-programButton.onclick = () => {
+}
+function handleProgram() {
   const alertMsg = document.getElementById("alertmsg");
   const err = validate_program_inputs();
   if (err != "success") {
@@ -172,5 +176,7 @@ programButton.onclick = () => {
       table.rows[index].cells[2].style.display = "none";
       table.rows[index].cells[3].style.display = "initial";
     }
+    handleDisconnect()
+    alert('Please Restart Device!')
   });
-};
+}

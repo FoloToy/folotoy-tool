@@ -1,6 +1,6 @@
 
 import { ESPLoader, Transport } from "esptool-js";
-import { disposeTerm, setTerm, MyTerm } from "../xterm/index";
+import { MyTerm } from "../xterm/index";
 import CryptoJS from "crypto-js";
 
 export default class DeviceBin {
