@@ -16,7 +16,6 @@ export default class DeviceBin {
     this.term = new MyTerm(terminal)
   }
   connectDevice = async () => {
-    console.log(this.device)
     if (!this.device) {
       this.device = await navigator.serial.requestPort({
         usbVendorId: '',
