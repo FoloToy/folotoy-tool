@@ -171,8 +171,11 @@ const onBaulrateFinish = (values) => {
             await deviceBin.value.connectDevice();
             current.value = 1
         } catch (e) {
+            console.log(e)
             current.value = 0
+            showTerm.value = false
             connectLoading.value = false
+            message.error(e.toString())
         }
 
     })

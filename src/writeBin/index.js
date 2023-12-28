@@ -16,6 +16,7 @@ export default class DeviceBin {
     this.term = new MyTerm(terminal)
   }
   connectDevice = async () => {
+    console.log(this.device)
     if (!this.device) {
       this.device = await navigator.serial.requestPort({
         usbVendorId: '',
@@ -45,7 +46,7 @@ export default class DeviceBin {
       this.esploader = new ESPLoader(flashOptions);
       this.chip = await this.esploader.main_fn();
     } catch (e) {
-      console.log(e)
+      throw Error(e)
     }
   }
   eraseDevice = () => {
